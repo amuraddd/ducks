@@ -1,6 +1,6 @@
 ./models/*
 ./data/*
-ducks/generated_artifacts/
+generated_artifacts/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
