@@ -21,10 +21,15 @@ from ding.data import create_dataset
 from ding.framework.context import OfflineRLContext
 from ding.framework.middleware import interaction_evaluator, trainer, CkptSaver, offline_data_fetcher, offline_logger
 
-if __name__=="__main__":
-    # set_ld_library_path()
-    main_config.exp_name = "generated_artifacts/halfcheetah_expert_cql_seed0"
-    main_config.env.replay_path="generated_artifacts/video/mujoco/halfcheetah" #save the video in this location
+# if __name__=="__main__":
+#     # set_ld_library_path()
+def run_cql_train(
+    exp_name: str="generated_artifacts/halfcheetah_expert_cql_seed0", 
+    replay_path: str="generated_artifacts/video/mujoco/halfcheetah",
+    train_feq=10000
+):
+    main_config.exp_name = exp_name
+    main_config.env.replay_path= replay_path #save the video in this location
 
     cfg = compile_config(
         main_config,
@@ -51,6 +56,6 @@ if __name__=="__main__":
         task.use(interaction_evaluator(cfg, policy.eval_mode, evaluator_env))
         task.use(offline_data_fetcher(cfg, dataset))
         task.use(trainer(cfg, policy.learn_mode))
-        task.use(CkptSaver(policy, cfg.exp_name, train_freq=100))
+        task.use(CkptSaver(policy, cfg.exp_name, train_freq=train_feq))
         task.use(offline_logger())
         task.run()
