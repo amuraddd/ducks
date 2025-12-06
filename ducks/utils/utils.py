@@ -13,10 +13,10 @@ def set_ld_library_path():
     """
     import os, pathlib, importlib.util, glob, shutil
     # ---- Force OSMesa (CPU) build & point to MuJoCo 2.1 ----
-    os.environ["MUJOCO_GL"] = "osmesa"
+    os.environ["MUJOCO_GL"] = "osmesa"#"egl"
     os.environ["MUJOCO_PY_FORCE_CPU"] = "1"
     os.environ["MUJOCO_PY_MUJOCO_PATH"] = str(pathlib.Path.home()/".mujoco/mujoco210")
-
+    print(os.environ["MUJOCO_PY_MUJOCO_PATH"])
     # Start LD_LIBRARY_PATH with MuJoCo binaries
     ld_parts = [str(pathlib.Path.home()/".mujoco/mujoco210/bin")]
 
@@ -30,6 +30,7 @@ def set_ld_library_path():
         glob.glob(root + "/vendor/lib/libglewosmesa.so")
         + glob.glob(root + "/generated/_pyxbld_*/**/libglewosmesa.so", recursive=True)
     )
+    # print(ld_parts)
     if not candidates:
         raise RuntimeError(
             "libglewosmesa.so not found under mujoco_py; "
@@ -37,11 +38,12 @@ def set_ld_library_path():
         )
     for c in candidates:
         ld_parts.append(os.path.dirname(c))
+    # print(ld_parts)
 
     # Apply LD_LIBRARY_PATH (prepend our paths)
     os.environ["LD_LIBRARY_PATH"] = ":".join(ld_parts + [os.environ.get("LD_LIBRARY_PATH", "")])
-
-    print("MUJOCO_GL =", os.environ["MUJOCO_GL"])
-    print("MUJOCO_PY_MUJOCO_PATH =", os.environ["MUJOCO_PY_MUJOCO_PATH"])
-    print("LD_LIBRARY_PATH entries:")
+    print( os.environ["LD_LIBRARY_PATH"])
+    # print("MUJOCO_GL =", os.environ["MUJOCO_GL"])
+    # print("MUJOCO_PY_MUJOCO_PATH =", os.environ["MUJOCO_PY_MUJOCO_PATH"])
+    # print("LD_LIBRARY_PATH entries:")
     for p in ld_parts: print("  ", p)
