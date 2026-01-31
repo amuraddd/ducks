@@ -1,13 +1,18 @@
 ## Diffusion for Offline Reinforcement Learning
 
+### main idea
+The main idea is that learning happens sequentially.
+We fist master a task at a lower level before mastering the medium level and then finally becoming experts at it.
+The data is observed in real life in exactly that way. The tasks are performed at a lower level of efficiency before high efficiency is achieved.
 
 #### Setup
 1. Pull offline datasets from Minari
-2. Create 3 separate batches of data
-    - Low reward batch
-    - Meidum reward batch
-    - high reward batch
-3. Train 3 separate diffusion models. One on each batch.
+2. Create 4 separate batches of data (use Quartiles to do this: 25%, 50%, 75%, 100%)
+    - Low reward batch 0-25
+    - Medium reward batch 25-50
+    - Meidum-high reward batch 50-75
+    - high reward batch 75-100
+3. Train 4 separate diffusion models. One on each batch.
 4. Interpolate all diffusion models by averaging the parameters.
 5. Use the final diffusion model to generate new offline episodic data.
 6. Learn an agent policy from the generated data using an offline RL algorithm (SAC or DDPG).
