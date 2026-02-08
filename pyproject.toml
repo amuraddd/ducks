@@ -1,0 +1,17 @@
+[project]
+name = "ducks"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "accelerate>=1.12.0",
+    "datasets>=2.16.1",
+    "diffusers>=0.36.0",
+    "ftfy>=6.3.1",
+    "minari[hdf5]>=0.5.3",
+    "pyarrow==9.0.0",
+    "seaborn>=0.13.2",
+    "torchvision>=0.25.0",
+    "transformers>=5.1.0",
+]
