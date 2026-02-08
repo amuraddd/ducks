@@ -18,7 +18,6 @@ def load_minari_dataset(dataset_name = "mujoco/hopper/simple-v0"):
     print("Action space:", minari_dataset.action_space)
     print("Total episodes:", minari_dataset.total_episodes)
     print("Total steps:", minari_dataset.total_steps)
-    print("\n\n")
     return minari_dataset
 
 def get_filtered_episodes_from_minari_dataset(minari_dataset):
@@ -51,6 +50,26 @@ def get_rewards_by_episode_quantile(filtered_episode_datasets):
         if filtered_episode_dataset.total_episodes: #check that there are episodes in the current quantile
             episode_rewards_by_quantile.append(np.concatenate(list(map(lambda ep: ep.rewards, filtered_episode_dataset))))
     return episode_rewards_by_quantile
+
+def get_obs_by_episode_quantile(filtered_episode_datasets):
+    """pull observations from each filtered episode dataset and return as a list of arrays
+    mostly used for plotting observation distributions by episode quantile
+    """
+    episode_obs_by_quantile = []
+    for filtered_episode_dataset in filtered_episode_datasets:
+        if filtered_episode_dataset.total_episodes: #check that there are episodes in the current quantile
+            episode_obs_by_quantile.append(np.concatenate(list(map(lambda ep: ep.observations, filtered_episode_dataset))))
+    return episode_obs_by_quantile
+
+def get_actions_by_episode_quantile(filtered_episode_datasets):
+    """pull actions from each filtered episode dataset and return as a list of arrays
+    mostly used for plotting action distributions by episode quantile
+    """
+    episode_actions_by_quantile = []
+    for filtered_episode_dataset in filtered_episode_datasets:
+        if filtered_episode_dataset.total_episodes: #check that there are episodes in the current quantile
+            episode_actions_by_quantile.append(np.concatenate(list(map(lambda ep: ep.actions, filtered_episode_dataset))))
+    return episode_actions_by_quantile
 
 
 def get_dataloader_from_episodes(filtered_episode_datasets, batch_size=32):

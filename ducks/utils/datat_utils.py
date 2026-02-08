@@ -25,7 +25,7 @@ def collate_fn(batch, unet_multiple: int = 18):
       Should be >= 2^(#down_blocks). For your UNet, 16 or 32 is safe.
     """
 
-    def pad_and_unsqueeze(seq_list):
+    def add_pad(seq_list):
         # Step 1: pad variable-length episodes → [B, T_max, F]
         x = torch.nn.utils.rnn.pad_sequence(
             [torch.as_tensor(s, dtype=torch.float32) for s in seq_list],
@@ -35,14 +35,13 @@ def collate_fn(batch, unet_multiple: int = 18):
         # Step 2: pad time dimension to UNet-safe multiple
         x, pad_right = pad_time_to_multiple(x, unet_multiple)
 
-        # Step 3: add channel dim → [B, 1, T_pad, F]
         return x, pad_right
 
-    observations, pad_obs = pad_and_unsqueeze([x.observations for x in batch])
-    actions,      pad_act = pad_and_unsqueeze([x.actions for x in batch])
-    rewards,      pad_rew = pad_and_unsqueeze([x.rewards for x in batch])
-    terminations, pad_ter = pad_and_unsqueeze([x.terminations for x in batch])
-    truncations,  pad_tru = pad_and_unsqueeze([x.truncations for x in batch])
+    observations, pad_obs = add_pad([x.observations for x in batch])
+    actions,      pad_act = add_pad([x.actions for x in batch])
+    rewards,      pad_rew = add_pad([x.rewards for x in batch])
+    terminations, pad_ter = add_pad([x.terminations for x in batch])
+    truncations,  pad_tru = add_pad([x.truncations for x in batch])
 
     # All pad_right values should be identical
     pad_right = pad_obs
