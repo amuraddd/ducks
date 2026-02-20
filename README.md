@@ -20,6 +20,11 @@ Merge all copies at the end through an averaging scheme based on mutual informat
 5. Use the final diffusion model to generate new offline episodic data.
 6. Learn an agent policy from the generated data using an offline RL algorithm (SAC or DDPG).
 
+### Ablation
+To show that training a single diffusion model on the entire training dataset is not as good; the following ablation would need to be done:
+- Train a single diffusion model on the entire dataset for each task.
+- Measure its performance in comparison to the new proposed method.
+
 ### Things to try:
 - Train a separate model for each percentile and combine them. Each model with its own loss function.
 - Train all models together using a single loss function.
@@ -30,7 +35,7 @@ S|A
 [s1, s2,....,sn]
 [a1, a2,....,an]
 
-Separate reward model for assessing quality of actions and states:
+Use the idea from AdaptDiffuser to condition the model on rewards:
 [r1, r2,....,rn]
 
 ## Part 2
@@ -47,3 +52,9 @@ Separate reward model for assessing quality of actions and states:
 ### Useful papers:
 - https://openreview.net/pdf?id=UvQOcw2oCD
 - https://arxiv.org/pdf/2205.09991
+
+### Papers which used Diffusion models for RL
+- Diffuser: This paper generated whole trajectories: https://arxiv.org/abs/2205.09991
+- Decision Diffuser: This paper introduced conditional diffusion with rewards or contraint guidance: https://arxiv.org/pdf/2211.15657
+- Diffusion-QL: Adds a regularization term to the loss function of the conditional diffusion model guiding it to learn optimal actions: https://arxiv.org/pdf/2208.06193
+- AdaptDiffuser: Trains conditioned diffusion models to be able to generalize on unseen tasks. This paper also filters out trajectories in the synthetic data before retraining on it: https://arxiv.org/pdf/2302.01877
